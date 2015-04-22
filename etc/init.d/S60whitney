@@ -1,0 +1,79 @@
+#! /bin/sh
+
+set -e
+MACADDR0=`fw_printenv ethaddr | cut -d '=' -f 2`
+MODEL_NAME=`fw_printenv model_name | cut -d '=' -f 2`
+
+MAC_1_TMP=`fw_printenv ethaddr | cut -d '=' -f 2 | cut -d ':' -f 1`
+MAC_2_TMP=`fw_printenv ethaddr | cut -d '=' -f 2 | cut -d ':' -f 2`
+MAC_3_TMP=`fw_printenv ethaddr | cut -d '=' -f 2 | cut -d ':' -f 3`
+MAC_4_TMP=`fw_printenv ethaddr | cut -d '=' -f 2 | cut -d ':' -f 4`
+MAC_5_TMP=`fw_printenv ethaddr | cut -d '=' -f 2 | cut -d ':' -f 5`
+MAC_6_TMP=`fw_printenv ethaddr | cut -d '=' -f 2 | cut -d ':' -f 6`
+
+MAC_1_TMP=0x$MAC_1_TMP
+MAC_2_TMP=0x$MAC_2_TMP
+MAC_3_TMP=0x$MAC_3_TMP
+MAC_4_TMP=0x$MAC_4_TMP
+MAC_5_TMP=0x$MAC_5_TMP
+MAC_6_TMP=0x$MAC_6_TMP
+
+MAC_1_TMP=`printf "%d" $MAC_1_TMP`
+MAC_2_TMP=`printf "%d" $MAC_2_TMP`
+MAC_3_TMP=`printf "%d" $MAC_3_TMP`
+MAC_4_TMP=`printf "%d" $MAC_4_TMP`
+MAC_5_TMP=`printf "%d" $MAC_5_TMP`
+MAC_6_TMP=`printf "%d" $MAC_6_TMP`
+
+let MAC_6_TMP=$MAC_6_TMP+1
+if [ $MAC_6_TMP -ge 256 ]; then
+let MAC_5_TMP=$MAC_5_TMP+1
+MAC_6_TMP=0
+fi
+if [ $MAC_5_TMP -ge 256 ]; then
+let MAC_4_TMP=$MAC_4_TMP+1
+MAC_5_TMP=0
+fi
+if [ $MAC_4_TMP -ge 256 ]; then
+let MAC_3_TMP=$MAC_3_TMP+1
+MAC_4_TMP=0
+fi
+if [ $MAC_3_TMP -ge 256 ]; then
+let MAC_2_TMP=$MAC_2_TMP+1
+MAC_3_TMP=0
+fi
+if [ $MAC_2_TMP -ge 256 ]; then
+let MAC_1_TMP=$MAC_1_TMP+1
+MAC_2_TMP=0
+fi
+
+MAC_1_TMP=`printf "%x" $MAC_1_TMP`
+MAC_2_TMP=`printf "%x" $MAC_2_TMP`
+MAC_3_TMP=`printf "%x" $MAC_3_TMP`
+MAC_4_TMP=`printf "%x" $MAC_4_TMP`
+MAC_5_TMP=`printf "%x" $MAC_5_TMP`
+MAC_6_TMP=`printf "%x" $MAC_6_TMP`
+
+case "$1" in
+  start)
+	modprobe sopp_cns3xxx_nas 
+	/sbin/ifconfig eth0 192.168.1.2 hw ether $MACADDR0
+  	if [ "$MODEL_NAME" != "whitney_1bay" -a "$MODEL_NAME" != "cirrus_v1" ]
+  	then
+		/sbin/ifconfig eth1 172.20.2.222 hw ether $MAC_1_TMP:$MAC_2_TMP:$MAC_3_TMP:$MAC_4_TMP:$MAC_5_TMP:$MAC_6_TMP
+	fi
+	echo ""
+	;;
+  stop)
+	echo ""
+	;;
+  restart|force-reload)
+	echo ""
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart|force-reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

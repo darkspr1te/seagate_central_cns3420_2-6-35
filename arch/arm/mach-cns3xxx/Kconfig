@@ -1,0 +1,152 @@
+menu "CNS3XXX platform type"
+	depends on ARCH_CNS3XXX
+
+config SILICON
+	bool "CNS3XXX silicon"
+
+
+config MACH_CNS3420VB
+	bool "Support for CNS3420 Validation Board"
+        select ARCH_REQUIRE_GPIOLIB
+        select ARM_GIC
+        select SILICON
+
+	help
+	  Include support for the Cavium Networks CNS3420 MPCore Platform
+	  Baseboard.
+	  This is a platform with an on-board ARM11 MPCore and has support
+	  for USB, USB-OTG, MMC/SD/SDIO, SATA, PCI-E, etc.
+
+choice
+        bool "CNS3XXX PCI-E Clock Source"
+        depends on MACH_CNS3420VB
+        default CNS3XXX_EXTERNAL_CLOCK_SOURCE
+
+#config CNS3XXX_AUTO_CLOCK_SOURCE
+#       tristate "Auto Select Clock Source"
+#       help
+#         Say Y if you don't know how to choose PCI-E clock source
+
+config CNS3XXX_INTERNAL_CLOCK_SOURCE
+        tristate "Internal Clock Source"
+        help
+          Say Y if you use the internal clock source
+
+config CNS3XXX_EXTERNAL_CLOCK_SOURCE
+        tristate "External Clock Source"
+        help
+          Say Y if you use the external clock source
+
+endchoice
+
+config CNS3XXX_PCIE_INTERFACE_0
+	bool "CNS3XXX PCI-E Interface 0"
+	default y
+	depends on MACH_CNS3420VB
+	help
+	  Say N if you don't use the PCI-E interface 0
+
+config CNS3XXX_PCIE_INTERFACE_1
+        bool "CNS3XXX PCI-E Interface 1"
+        depends on MACH_CNS3420VB
+        default y
+        help
+          Say N if you don't use the PCI-E interface 1
+
+config CNS3XXX_PCIE_RESET_DEVICE
+		bool "Reset PCIe Device by GPIO"
+		default y
+		depends on ARCH_CNS3XXX
+		help
+	  	Reset PCIe Device by GPIO before the pcie scan bus.
+	  		If unsure, say Y.
+
+config CNS3XXX_RESET_GPIO_BLOCK
+		bool "Reset GPIO block at booting"
+		default y
+		depends on ARCH_CNS3XXX
+		help
+	  	Reset GPIO block at booting, GPIO pins' value and function will set to default.
+	  		If unsure, say Y.
+
+config CNS3XXX_INVERT_SD_WP_PIN_STATE
+		bool "Invert SD Write Protect pin state"
+		default y
+		depends on ARCH_CNS3XXX
+		help
+	  	Invert SD Write Protect pin state.
+	  		If unsure, say Y.
+
+config CNS3XXX_RAID
+		bool "Support for CNS3XXX RAID"
+		depends on ARCH_CNS3XXX
+		help
+	  	Enable RAID 4/5/6 Hardware accelartion in CNS3XXX.
+	  		If unsure, say N.
+
+config CNS3XXX_DMAC
+        bool "Support for CNS3XXX DMAC"
+        depends on ARCH_CNS3XXX
+        help
+          Enable support for the CNS3XXX DMA controllers.
+
+config CNS3XXX_DMAC_M2MTEST
+        tristate "Memory-to-Memory Test Module"
+        depends on ARCH_CNS3XXX
+        depends on CNS3XXX_DMAC
+        help
+          Say yes here to enable support Memory-to-Memory test module.
+
+config CNS3XXX_GPU_ENVIRONMENT
+        bool "CNS3XXX GPU(GC300 2D Acceleration) Support"
+        default n
+        help
+                Say Y if you want to support 2D acceleration.
+
+config CNS3XXX_PCM_LEGERITY_2PHONE_DEMO
+        tristate "2 phone PCM sound demo driver"
+        depends on SPI
+        select SPI_CNS3XXX
+#       select LE88221_CONTROL
+        default n
+
+choice
+        prompt "PCM device"
+        depends on CNS3XXX_PCM_LEGERITY_2PHONE_DEMO
+        default SI3226
+
+config LE88221_CONTROL
+        bool "Le88221"
+
+config SI3226_CONTROL_API
+        bool "Si3226 using Proslic API"
+        #depends on CNS3XXX_GPIO         # H/W reset seems is not necessary
+endchoice
+
+config CNS3XXX_SPEEDUP_NAS
+	bool "NAS Speedup"
+
+config CNS3XXX_HIGH_PHYS_OFFSET
+    bool "High physical base address for the CNS3XXX platform"
+    depends on MMU
+    default y
+    help
+      CNS3XXX boards have the RAM available at 0x20000000,
+      256MB of which being mirrored at 0x00000000.
+      If the board supports 512MB of RAM, this option allows the
+      memory to be accessed contiguously at the high physical
+      offset.
+
+config CNS3XXX_EXT_INTR_DEMO
+	tristate "External interrupt demo program"
+	depends on MACH_CNS3420VB
+	select GPIO_CNS3XXX
+	help
+	  This program hooks interrupt service routine to external interrupts
+	  0 ~ 3.
+	    Name      EVB             Trigger type  ISR
+	    Ext_Int0                  Rising edge
+	    Ext_Int1  Push button S3  Rising edge   Toggle LED D6
+	    Ext_Int2  Push button S4  High level    Toggle LED D7
+
+endmenu

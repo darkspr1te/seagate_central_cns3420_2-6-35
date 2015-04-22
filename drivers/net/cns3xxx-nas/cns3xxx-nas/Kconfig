@@ -1,0 +1,78 @@
+menu "CNS3XXX Gigabit Switch Support"
+	depends on ARCH_CNS3XXX
+
+config CNS3XXX_GSW
+	tristate "CNS3XXX Gigabit Switch Driver Support"
+	depends on ARCH_CNS3XXX
+	select CNS3XXX_PSE_INIT
+	help
+	  CNS3XXX layer-2 Packet Switching Enging(PSE) is a 5-port Layer-2
+	  non-blocking shared-memory switch fabric: 3 MAC ports are exposed
+	  for external connections, and the other two are used internally for
+	  CPU port, and L2/L3/L4 Packet Processing Engine(PPE) respectively.
+
+config CNS3XXX_SPPE
+	bool "CNS3XXX Smart PPE(Packet Processing Engine) Support"
+	depends on CNS3XXX_GSW
+	help
+	  PPE(Packet Processing Engine) is a hardware accelerator hook on a port of 
+	  CNS3XXX Gigabit Switch.
+	  
+	  This option is used for Smart PPE hook. 
+
+	  Say Y if you want to enable Smart PPE function.
+
+config CNS3XXX_PSE_WOL
+	bool "CNS3XXX PSE Wake-On-LAN Support"
+	depends on CNS3XXX_GSW && SUSPEND
+	help
+	  CNS3XXX PSE block supports Wake-On-LAN(WOL) and requires a specific
+	  magic packet to wake up CPU from DOZE mode.
+
+	  Say Y if you want to enable PSE WOL feature.
+
+config CNS3XXX_ETHADDR_IN_FLASH
+	bool "CNS3XXX MAC address in flash"
+	depends on CNS3XXX_GSW && MTD
+	help
+	  Say Y if you want to load MAC address from flash.
+
+choice
+	prompt "Load MAC address from ..."
+	depends on CNS3XXX_ETHADDR_IN_FLASH
+	default MAC_IN_PARALLEL_FLASH
+
+config CNS3XXX_MAC_IN_PARALLEL_FLASH
+	bool "Parallel Flash"
+
+config CNS3XXX_MAC_IN_SPI_FLASH
+	bool "SPI Flash"
+
+endchoice
+
+config CNS3XXX_HCIE_TEST
+	bool "CNS3XXX HCIE(Hardware Content Inspection Engine) Support"
+#	depends on CNS3XXX_GSW
+	help
+	  HCIE is patent-protected layer-7 packet processing engine.
+	  
+	  This option is used for fundamental HCIE functional test . 
+	  Say Y if you want to do HCIE functional test.
+		
+
+#config CNS3XXX_SHNAT_PCI_FASTPATH
+#	bool "FastPath(From PCI to WAN) Support"
+#	depends on CNS3XXX_SHNAT
+#	help
+#	  Add FastPath Support for Smart HNAT.
+
+config BCM53115
+	tristate
+	depends on VB || VB_2
+	select GPIO_CNS3XXX
+	select SPI_CNS3XXX
+	default m if CNS3XXX_GSW=m
+	default y if CNS3XXX_GSW=y
+
+endmenu
+

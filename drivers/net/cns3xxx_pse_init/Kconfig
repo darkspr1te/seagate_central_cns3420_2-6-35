@@ -1,0 +1,126 @@
+menu "CNS3XXX Gigabit Switch Support Init"
+	depends on ARCH_CNS3XXX
+
+config CNS3XXX_PSE_INIT
+	tristate "CNS3XXX PSE Initialize part"
+	depends on ARCH_CNS3XXX && CNS3XXX_GSW
+	default m
+	help
+	  CNS3XXX layer-2 Packet Switching Enging(PSE) is a 5-port Layer-2
+	  non-blocking shared-memory switch fabric: 3 MAC ports are exposed
+	  for external connections, and the other two are used internally for
+	  CPU port, and L2/L3/L4 Packet Processing Engine(PPE) respectively.
+
+config CNS3XXX_PSE_SW_PHY_AUTO_POLLING
+	bool "CNS3XXX PSE Software PHY auto-polling"
+	depends on ARCH_CNS3XXX && CNS3XXX_GSW
+	default n
+	help
+		Software PHY Auto-Polling enables instead of Hardware PHY Auto-Polling.
+
+choice
+	prompt "Board Configuration"
+	depends on CNS3XXX_PSE_INIT
+	default VB
+
+config FPGA
+	bool "VSC8601x2 + IP101A (EXPERIMENTAL)"
+	help
+	  MAC0, MAC1 connect to two Vitesse VSC8601 gigabit ethernet transceiver.
+	  MAC2 connect to IC Plus IP101A 10/100Mbps fast ethernet transceiver.
+
+config AR8021
+	bool "Cavium 2Bay NAS demo board(AR8021,EXPERIMENTAL)"
+	help
+	  MAC0 connect to Atheros AR8021 gigabit ethernet transceiver.
+	  MAC1 and MAC2 are left for no connection.
+
+config AR8316
+	bool "AR8316 (EXPERIMENTAL)"
+	help
+	  MAC0 and MAC1 connect to Atheros AR8316 six port gigabit ethernet switch.
+	  MAC2 is left for no connection.
+
+config AR8327
+	bool "AR8327"
+	help
+	  MAC0 and MAC1 connect to Atheros AR8327 7 port gigabit ethernet switch.
+	  MAC2 is left for no connection.
+	  CNS34XX RG Demo Board v1.0
+
+config IP1001_X2
+        bool "IP1001x2 (EXPERIMENTAL)"
+	help
+	  MAC0, MAC1 connect to two IC Plus IP1001 gigabit ethernet transceiver.
+	  MAC2 is left for no connection.
+
+config RTL8367
+	bool "RTL8367 (EXPERIMENTAL)"
+	help
+	  MAC0 and MAC1 connect to Realtek RTL8367 5-port 10/100/1000 switch controller.
+	  MAC2 is left for no connection.
+
+config RTL8367_ONE_LEG
+	bool "RTL8367 ONE LEG (EXPERIMENTAL)"
+	help
+	  MAC0 connect to Realtek RTL8367 5-port 10/100/1000 switch controller.
+	  MAC1/MAC2 is left for no connection.
+
+config RTL8366RB
+	bool "RTL8366RB (EXPERIMENTAL)"
+	help
+	  MAC0 and MAC1 connect to Realtek RTL8366RB 10/100/1000 switch controller.
+	  MAC2 is left for no connection.
+
+config RTL8211
+	bool "RTL8211 (EXPERIMENTAL)"
+	help
+	  MAC0 connects to Realtek RTL8211 gigabit ethernet transceiver.
+	  MAC1 and MAC2 are left for no connection.
+
+config RTL8211_X2
+    bool "RTL8211_X2 (EXPERIMENTAL)"
+	help
+	  MAC0, MAC1 connect to two Realtek RTL8211 gigabit ethernet transceiver.
+	  MAC2 is left for no connection.
+
+config RTL8211_MAC0_PHYADDR1
+	bool "RTL8211_MAC0_PHYADDR1 (EXPERIMENTAL)"
+	help
+	  MAC0 connects to Realtek RTL8211 gigabit ethernet transceiver.
+	  MAC1 and MAC2 are left for no connection.
+
+config VB
+	bool "Validation Board 1.x or 2.X"
+	help
+	  This configuration is used for CNS3420 Validation Board version: 1.1, 1,2 and 1.3.
+	  MAC0 and MAC1 connect to Broadcom BCM53115M 5-port 10/100/1000 switch.
+	  MAC2 connect to IC Plus IP1001 gigabit ethernet transceiver (1.X).
+	  MAC2 connect to Realtek RTL8211 gigabit ethernet transceiver (2.X).
+
+config VITESSE7395
+	bool "VITESSE_7395 (EXPERIMENTAL)"
+        help
+	  This configureation connect MAC0 to Vitesse 7395
+          And run at 802.1p mode. WAN port vid is 2, LAN port vid is 3
+
+endchoice
+
+config BCM53115
+	tristate
+	depends on VB
+	select GPIO_CNS3XXX
+	select SPI_CNS3XXX
+	default m if CNS3XXX_GSW=m
+	default y if CNS3XXX_GSW=y
+
+config VTE7395
+	tristate
+	depends on VITESSE7395
+	select GPIO_CNS3XXX
+	select SPI_CNS3XXX
+	default m if CNS3XXX_GSW=m
+	default y if CNS3XXX_GSW=y
+
+endmenu
+

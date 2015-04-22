@@ -1,0 +1,69 @@
+config SND_CNS3XXX_SOC
+	tristate
+
+config SND_CNS3XXX_SOC_I2S
+	tristate
+
+config SND_CNS3XXX_SOC_CHIP
+	tristate "I2S interface audio card driver"
+	depends on ARCH_CNS3XXX
+	select PL330_DMAC
+	select SND_CNS3XXX_SOC
+	select SND_CNS3XXX_SOC_I2S
+	select I2C_CNS3XXX
+	help
+	  Say Y if you want to add support for I2S SoC audio on
+	  CNS3XXX chip
+
+choice
+	bool "Codec Type"
+	depends on SND_CNS3XXX_SOC_CHIP
+	default CNS3XXX_CODEC_WM8991
+
+config CNS3XXX_CODEC_WM8991
+	tristate "Wolfson WM8991 Mobile Multimedia CODEC"
+	select SND_SOC_WM8991 if SND_CNS3XXX_SOC_CHIP=y
+	help
+	  The WM8991 is a highly integrated ultra-low power hi-fi CODEC
+	  designed for handsets rich in multimedia features such as GPS,
+	  mobile TV, digital audio playback and gaming. Ultra-low power
+	  and low noise interfaces to many other audio components in the
+	  system are provided.
+
+config CNS3XXX_CODEC_WM8580
+	tristate "Wolfson WM8580 CODEC with S/PDIF transceiver"
+	select SND_SOC_WM8580 if SND_CNS3XXX_SOC_CHIP=y
+	help
+	  The WM8580 is a multi-channel audio CODEC with S/PDIF transceiver.
+	  The WM8580 is ideal for DVD and surround sound processing
+	  applications for home hi-fi, automotive and other audiovisual
+	  equipment.
+
+config CNS3XXX_CODEC_WAU8822
+	tristate "Nuvoton WAU8822 Audio CODEC"
+	select SND_SOC_WAU8822 if SND_CNS3XXX_SOC_CHIP=y
+	help
+	  Nuvoton WAU8822 is a Stereo, 24-Bit ADC and DAC, Built In Amps:
+	  1W Speaker and 40mW Head Phone audio CODEC.
+
+endchoice
+
+config SND_CNS3XXX_SOC_PCM1
+	tristate "Wolfson WM9081 mono DAC support(PCM1)"
+	depends on ARCH_CNS3XXX
+	select PL330_DMAC
+	select SND_SOC_WM9081
+	select SND_CNS3XXX_SOC_PCM1_FMT
+	select SND_CNS3XXX_SOC_PCM1_TRNSFR
+	help
+          WM9081: Mono DAC with Integrated 2.6W Class AB/D Amplifier
+	  The WM9081 is designed to provide high power output at low distortion
+	  levels in space-constrained portable applications.
+	  For general information, goto Wolfcon support website at:
+	  <http://www.wolfsonmicro.com/products/audio_amplifiers/WM9081/>
+
+config SND_CNS3XXX_SOC_PCM1_FMT
+	tristate
+
+config SND_CNS3XXX_SOC_PCM1_TRNSFR
+	tristate

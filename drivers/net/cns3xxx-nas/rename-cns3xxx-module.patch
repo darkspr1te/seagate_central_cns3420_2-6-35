@@ -1,0 +1,13 @@
+--- linux-2.6.35.12-cavm1/drivers/net/cns3xxx/Makefile   
++++ linux-2.6.35.12-cavm1/drivers/net/cns3xxx/Makefile   
+@@ -32,8 +32,8 @@
+ #obj-y :=
+ #obj-m :=
+ 
+-obj-$(CONFIG_CNS3XXX_GSW) += cns3xxx.o
+-cns3xxx-objs := cns3xxx_main.o cns3xxx_ethtool.o cns3xxx_ioctl.o
++obj-$(CONFIG_CNS3XXX_GSW) += cns3xxx_nas.o
++cns3xxx_nas-objs := cns3xxx_main.o cns3xxx_ethtool.o 
+ #obj-$(CONFIG_RTL8367) += rtl8367/
+ #EXTRA_CFLAGS += -Idrivers/net/cns3xxx/rtl8367/
+ #vega_main.o

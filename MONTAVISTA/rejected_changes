@@ -1,0 +1,22 @@
+# The following changes from mvl-2.6/common were already in v2.6.35
+52e86ab7d660fe117f810086e47b069538958fcb phylib: fixes for PHY_RESUMING state changes
+5667b7390bab7662ca768a750ed38a17fedf4820 8250: Now honours baud rate lower bounds
+1b614fb9a00e97b1eab54d4e442d405229c059dd netpoll: Fix carrier detection for drivers that are using phylib
+bf40d3435caf49369058b1ed6bbc92f8e2bd92f1 NFS: add support for splice writes
+
+# The following 2 commits were already applied in security fixes
+7ab99e2ebb57576e1e853e9de18f242558196f6f ALSA: seq/oss - Fix double-free at error path of snd_seq_oss_open()
+53d9dee0d76a860134cb8360f296bb01efea2558 wireless extensions: fix kernel heap content leak
+
+# The following 4 commits from v2.6.35.6 were already applied as security fixes
+2f2c0c6440110d7436f202ecf918734243e7b870 irda: Correctly clean up self->ias_obj on irda_bind() failure.
+21313e0760fd268ca778f54c10b4e8f8e889c97c KEYS: Fix RCU no-lock warning in keyctl_session_to_parent()
+0f403655ecddfdb7630adbb6ba59c30cb0c541a4 KEYS: Fix bug in keyctl_session_to_parent() if parent has no session keyring
+0d1f22d21f4ca1fe9943667b712beb4d80611236 xfs: prevent reading uninitialized stack memory
+
+# The following security fix from v2.6.35.11 had already been applied
+6e3cd473b8826c8ca545135f5b49ddb73f15d54f sound: Prevent buffer overflow in OSS load_mixer_volumes
+
+# The following security fix from v2.6.35.13 had already been applied
+7e150642300a8c69f3e219f960f0d454ca442df8 usb: iowarrior: don't trust report_size for buffer size
+

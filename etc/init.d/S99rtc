@@ -1,0 +1,20 @@
+#!/bin/sh
+#modprobe cns3xxx-flash
+
+BOARDTEST_STATE_RTC=`fw_printenv boardtest_state_rtc | cut -d '=' -f 2`
+
+mkdir -p /mnt/rtc
+chmod 777 /mnt/rtc
+
+if [ "$BOARDTEST_STATE_RTC" = "formatted" ]
+then
+	mount /dev/mtdblock2 /mnt/rtc/
+	if [ -e "/mnt/rtc/rtc_log.txt" ]; then
+ 		echo "rtc_log file is exist!"
+	else
+ 		echo "no rtc_log file"
+	fi
+	modprobe rtc-cns3xxx
+	sleep 2
+	hwclock -s
+fi

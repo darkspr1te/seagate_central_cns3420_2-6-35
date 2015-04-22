@@ -1,0 +1,13 @@
+--- a/drivers/net/cns3xxx/cns3xxx_ethtool.c	2011-07-28 13:51:30.311521552 +0800
++++ b/drivers/net/cns3xxx/cns3xxx_ethtool.c	2011-10-06 22:47:20.833803796 +0800
+@@ -26,8 +26,8 @@
+ #include <linux/types.h>
+ #include <linux/ethtool.h>
+ #include <linux/netdevice.h>
+-#include "../cns3xxx_pse_init/cns3xxx_symbol.h"
+-#include "../cns3xxx_pse_init/cns3xxx.h"
++#include "../../cns3xxx_pse_init/cns3xxx_symbol.h"
++#include "../../cns3xxx_pse_init/cns3xxx.h"
+ #include "cns3xxx_tool.h"
+ 
+ #ifdef CONFIG_CNS3XXX_PSE_SW_PHY_AUTO_POLLING

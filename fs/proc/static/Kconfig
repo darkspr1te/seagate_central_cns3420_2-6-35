@@ -1,0 +1,9 @@
+config PROC_STATIC_FILES
+	tristate "Support for statically initialized /proc files"
+	default y
+	depends on PROC_FS
+	help
+	  This enables all of the files in the kernel source directory
+	  fs/proc/static/files at kernel build time to be available in
+	  /proc.   It is useful for recording kernel configuration information.
+

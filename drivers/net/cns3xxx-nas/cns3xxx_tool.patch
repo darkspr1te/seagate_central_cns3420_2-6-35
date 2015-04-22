@@ -1,0 +1,31 @@
+--- a/drivers/net/cns3xxx/cns3xxx_tool.h	2011-08-15 17:21:42.622526014 +0800
++++ b/drivers/net/cns3xxx/cns3xxx_tool.h	2011-10-06 22:47:20.865803795 +0800
+@@ -29,7 +29,7 @@
+ 
+ #if defined(__KERNEL__)
+ 
+-#include "../cns3xxx_pse_init/cns3xxx.h"
++#include "../../cns3xxx_pse_init/cns3xxx.h"
+ #include <linux/kernel.h> // for printk
+ 
+ #else // u-boot
+@@ -799,18 +799,11 @@
+ // clear: 1 clear
+ static inline void clear_fs_dma_state(u8 clear)
+ {
+-#ifdef DO_CLEAR_FS_DMA
+-	//printk("do clear fs dma\n");
+ 	DMA_RING_CTRL_REG &= (~(1 << 31));
+ 	if (clear==1) {
+ 		DMA_RING_CTRL_REG |= (1 << 31);
+-		while(((DMA_RING_CTRL_REG >> 30) & 1) == 0);
+-		DMA_RING_CTRL_REG &= (~(1 << 31));
+ 	}
+-	//printk("DMA_RING_CTRL_REG: %#x\n", DMA_RING_CTRL_REG);
+-#else
+-	//printk("in clear_fs_dma_state: do nothing.\n");
+-#endif
++//	printk("DMA_RING_CTRL_REG: %#x\n", DMA_RING_CTRL_REG);
+ }
+ 
+ // enable: 1 -> IVL
